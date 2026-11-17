@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>2. A button and checkbox control one cube</title>
+<style>:root{color-scheme:light}*{box-sizing:border-box}body{margin:0;background:#f6f3e9;
+  color:#20382f;font:18px/1.5 Arial,sans-serif}main{max-width:950px;margin:auto;padding:24px}
+  h1{font-size:2rem;line-height:1.2}a{color:#075a70}button,input{font:inherit}button{padding:9px 16px;
+  background:#365b47;color:white;border:2px solid #365b47;
+  border-radius:4px;margin:8px 8px 8px 0;cursor:pointer}label{display:inline-block;
+  margin:8px 18px 8px 0}input[type=number]{width:90px}input[type=text]
+  {width:210px;max-width:100%}input[type=checkbox]{width:20px;height:20px;vertical-align:middle}
+  fieldset{border:1px solid #b9c6b6;margin:16px 0;
+  padding:12px 18px}canvas{display:block;max-width:100%;height:auto!important}
+  #drawing{max-width:600px;background:#111;min-height:180px}#status{padding:12px 18px;background:#ece6d3;border-left:4px solid #996122}
+  pre{white-space:pre-wrap;overflow-wrap:anywhere;
+  font:16px/1.4 Consolas,monospace;background:#20362d;color:#fff;padding:18px}
+  code{font-family:Consolas,monospace}.small{font-size:15px;color:#4c6157}:focus-visible
+  {outline:3px solid #ad7322;outline-offset:3px}summary{cursor:pointer;font-weight:bold}details{margin-top:25px}</style>
+  </head><body><main><p class="small">Week 5 class example.
+     The assignment file contains the readings and other examples.</p>
+     <h1>2. A button and checkbox control one cube</h1><p>Question: Can rotation and colour both be changed at the same time?
+     </p><label for="scaleInput">Scale (0.5 to 2) <input id="scaleInput" type="number" min="0.5" max="2" step="0.1" value="1">
+    </label><button id="applyButton" type="button">Apply scale</button><label><input id="rotateBox" type="checkbox" checked> Rotate</label><p id="status" role="status">The scene needs internet to load Three.js and a WebGL 2 capable browser. If the canvas does not appear, inspect Console and Network in DevTools.</p><div id="drawing" role="img" aria-label="2. A button and checkbox control one cube"></div><p class="small">Edit this HTML in your editor, save, and reload. The script below is the exact running code.</p><details><summary>Read this checkpoint’s JavaScript</summary><pre><code>// Load the same pinned library version as the class starter.
+import * as THREE from &quot;https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js&quot;;
+
+// Supplied scene setup. Read each part in the matching slides.
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 100);
+camera.position.z = 3;
+let renderer = new THREE.WebGLRenderer();
+renderer.setSize(600, 400);
+document.getElementById(&quot;drawing&quot;).appendChild(renderer.domElement); 
+
+// Reuse one geometry and material. Sharing the material shares its colour.
+let geometry = new THREE.BoxGeometry(1, 1, 1);
+let material = new THREE.MeshBasicMaterial({
+  color: &quot;cyan&quot;,
+  wireframe: true
+});
+
+let cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+// Click handler: read an input and apply it to the object.
+function applyScale() {
+  let scale = document.getElementById(&quot;scaleInput&quot;).valueAsNumber;
+  // Supplied validation also catches an empty number field.
+  if (Number.isFinite(scale) &amp;&amp; scale &gt;= 0.5 &amp;&amp; scale &lt;= 1.5) {
+    cube.scale.x = scale;
+    cube.scale.y = scale;
+    cube.scale.z = scale;
+    document.getElementById(&quot;status&quot;).textContent = &quot;Applied scale: &quot; + scale;
+  } else {
+    document.getElementById(&quot;status&quot;).textContent = &quot;Enter a scale from 0.5 to 1.5.&quot;;
+  }
+}
+
+function animate() {
+  let rotate = document.getElementById(&quot;rotateBox&quot;).checked;
+  if (rotate == true) {
+    cube.rotation.x = cube.rotation.x + 0.01;
+    cube.rotation.y = cube.rotation.y + 0.01;
+  }
+  // Keep drawing even while rotation is paused: scale edits still appear.
+  renderer.render(scene, camera);
+}
+
+document.getElementById(&quot;applyButton&quot;).addEventListener(&quot;click&quot;, applyScale);
+renderer.setAnimationLoop(animate);
+document.getElementById(&quot;status&quot;).textContent = &quot;Ready. Apply a scale, then untick Rotate.&quot;;
+</code></pre></details></main><script type="module">
+// Load the same pinned library version as the class starter.
+import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js";
+
+// Supplied scene setup. Read each part in the matching slides.
+let scene = new THREE.Scene();
+let camera = new THREE.PerspectiveCamera(75, 600 / 400, 0.1, 100);
+camera.position.z = 3;
+let renderer = new THREE.WebGLRenderer();// Creates the canvas and the WebGL context, draws 3D graphics in the browser.
+renderer.setSize(600, 400);//Canvas size width and height.
+document.getElementById("drawing").appendChild(renderer.domElement); // Adds the canvas to the HTML page. 
+
+// Reuse one geometry and material. Sharing the material shares its colour.
+let geometry = new THREE.BoxGeometry(1, 1, 1); //This is what makes the cube a box shape, if you change the numbers it will change the size of the cube
+let material = new THREE.MeshBasicMaterial({
+  color: "red",   //So this is what set the colour of the cube to cyan 
+  wireframe: false //This is what makes the cube a wireframe cube, if you set this to false it will be a solid cube
+});
+
+let cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+// Click handler: read an input and apply it to the object.
+function applyScale() {
+  let scale = document.getElementById("scaleInput").valueAsNumber; //This is gets the input and makes it the cubes scale
+  // Supplied validation also catches an empty number field.
+  if (Number.isFinite(scale) && scale >= 0.5 && scale <= 2) { //This is what makes the cube scale between 0.5 and 2
+    cube.scale.x = scale;
+    cube.scale.y = scale;
+    cube.scale.z = scale;
+    document.getElementById("status").textContent = "Applied scale: " + scale; //Makes the status text change to show the scale that was applied
+  } else {
+    document.getElementById("status").textContent = "Enter a scale from 0.5 to 2";//Makes the status text change to show the user that they need to enter a scale between 0.5 and 2
+  }
+}
+let count = 0;
+let isRed = true;
+function animate() {
+  let rotate = document.getElementById("rotateBox").checked;
+  if (rotate == true) {
+   cube.rotation.x = cube.rotation.x + 0.01; //This is what makes the cube rotate on the x axis
+    cube.rotation.y = cube.rotation.y + 0.01;//This is what makes the cube rotate on the y axis
+    
+    count++;
+     if (count >= 8) {
+      if (isRed == true) {
+        material.color.set("blue"); //If blue then can't be red
+        isRed = false;
+      } else {
+        material.color.set("red");
+        isRed = true;
+      }
+
+      count = 0;}
+  
+  
+  
+  
+  }
+  // Keep drawing even while rotation is paused: scale edits still appear.
+  renderer.render(scene, camera);
+}
+
+document.getElementById("applyButton").addEventListener("click", applyScale);
+renderer.setAnimationLoop(animate);
+document.getElementById("status").textContent = "Ready. Apply a scale, then untick Rotate.";
+
+</script></body></html>
+
